@@ -482,8 +482,16 @@ function showSelectionScreen() {
         gameState.timerInterval = null;
     }
     
-    // Reset game state completely
-    resetGame();
+    // Reset game state
+    gameState.score = 0;
+    gameState.questionsAnswered = 0;
+    gameState.questionsCorrect = 0;
+    gameState.currentQuestion = null;
+    gameState.correctAnswer = null;
+    gameState.options = [];
+    gameState.timeRemaining = gameState.timeLimit;
+    gameState.isTransitioning = false;
+    gameState.lastActionTime = Date.now();
     
     // Show selection screen
     showScreen('selection');
@@ -933,8 +941,8 @@ function resetGame() {
         gameState.isTransitioning = false;
         gameState.lastActionTime = Date.now();
         
-        // Show selection screen
-        showSelectionScreen();
+        // Show selection screen without recursion
+        showScreen('selection');
     } catch (e) {
         logError('resetGame', e);
         // As a last resort, reload the page
