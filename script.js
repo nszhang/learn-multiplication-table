@@ -482,10 +482,8 @@ function showSelectionScreen() {
         gameState.timerInterval = null;
     }
     
-    // Reset game state
-    gameState.score = 0;
-    gameState.questionsAnswered = 0;
-    gameState.questionsCorrect = 0;
+    // Reset game state completely
+    resetGame();
     
     // Show selection screen
     showScreen('selection');
