@@ -46,7 +46,8 @@ const gameState = {
     timerInterval: null,
     isTransitioning: false, // Add flag to prevent simultaneous transitions
     lastActionTime: Date.now(), // Track last action time to detect hangs
-    soundEnabled: true // Sound enabled by default
+    soundEnabled: true, // Sound enabled by default
+    pendingTimeouts: [], // Track all active timeouts
 };
 
 // DOM Elements
@@ -476,25 +477,35 @@ function showScreen(screenName) {
 
 // Show selection screen
 function showSelectionScreen() {
-    // Clear any running timers
-    if (gameState.timerInterval) {
-        clearInterval(gameState.timerInterval);
-        gameState.timerInterval = null;
+    try {
+        // Clear any running timers
+        if (gameState.timerInterval) {
+            clearInterval(gameState.timerInterval);
+            gameState.timerInterval = null;
+        }
+
+        // Clear all pending timeouts
+        gameState.pendingTimeouts.forEach(timeout => {
+            clearTimeout(timeout);
+        });
+        gameState.pendingTimeouts = [];
+        
+        // Reset game state
+        gameState.score = 0;
+        gameState.questionsAnswered = 0;
+        gameState.questionsCorrect = 0;
+        gameState.currentQuestion = null;
+        gameState.correctAnswer = null;
+        gameState.options = [];
+        gameState.timeRemaining = gameState.timeLimit;
+        gameState.isTransitioning = false;
+        gameState.lastActionTime = Date.now();
+        
+        // Show selection screen
+        showScreen('selection');
+    } catch (e) {
+        logError('showSelectionScreen', e);
     }
-    
-    // Reset game state
-    gameState.score = 0;
-    gameState.questionsAnswered = 0;
-    gameState.questionsCorrect = 0;
-    gameState.currentQuestion = null;
-    gameState.correctAnswer = null;
-    gameState.options = [];
-    gameState.timeRemaining = gameState.timeLimit;
-    gameState.isTransitioning = false;
-    gameState.lastActionTime = Date.now();
-    
-    // Show selection screen
-    showScreen('selection');
 }
 
 // Start the game
@@ -691,33 +702,38 @@ function startTimer() {
 
 // Handle time's up
 function timeUp() {
-    // Disable all answer buttons
-    answerButtons.forEach(button => {
-        button.disabled = true;
-    });
-    
-    // Highlight correct answer
-    answerButtons.forEach(button => {
-        if (parseInt(button.textContent) === gameState.correctAnswer) {
-            button.classList.add('correct-answer');
-        }
-    });
-    
-    // Show feedback
-    feedbackDisplay.textContent = `Time's up! The correct answer is ${gameState.correctAnswer}.`;
-    feedbackDisplay.className = 'text-center p-4 rounded-lg mb-6 feedback-wrong';
-    feedbackDisplay.classList.remove('hidden');
-    
-    // Play wrong sound
-    playSoundSafely(wrongSound);
-    
-    // Update questions answered
-    gameState.questionsAnswered++;
-    
-    // Wait a moment before next question
-    setTimeout(() => {
-        safeTransition();
-    }, 2000);
+    try {
+        // Disable all answer buttons
+        answerButtons.forEach(button => {
+            button.disabled = true;
+        });
+        
+        // Highlight correct answer
+        answerButtons.forEach(button => {
+            if (parseInt(button.textContent) === gameState.correctAnswer) {
+                button.classList.add('correct-answer');
+            }
+        });
+        
+        // Show feedback
+        feedbackDisplay.textContent = `Time's up! The correct answer is ${gameState.correctAnswer}.`;
+        feedbackDisplay.className = 'text-center p-4 rounded-lg mb-6 feedback-wrong';
+        feedbackDisplay.classList.remove('hidden');
+        
+        // Play wrong sound
+        playSoundSafely(wrongSound);
+        
+        // Update questions answered
+        gameState.questionsAnswered++;
+        
+        // Wait a moment before next question
+        const timeout = setTimeout(() => {
+            safeTransition();
+        }, 2000);
+        gameState.pendingTimeouts.push(timeout);
+    } catch (e) {
+        logError('timeUp', e);
+    }
 }
 
 // Check the player's answer
@@ -786,9 +802,10 @@ function checkAnswer(playerAnswer) {
     feedbackDisplay.classList.remove('hidden');
     
     // Wait a moment before next question
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
         safeTransition();
     }, 2000);
+    gameState.pendingTimeouts.push(timeout);
 }
 
 // Show results
