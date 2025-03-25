@@ -1,0 +1,303 @@
+/* Custom styles for Learn Multiplication game */
+
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes scale {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Sound toggle button */
+#sound-toggle {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 40px;
+    height: 40px;
+}
+
+#sound-toggle:hover {
+    transform: scale(1.1);
+    background-color: #dbeafe;
+}
+
+#sound-toggle:active {
+    transform: scale(0.95);
+}
+
+#sound-toggle.sound-disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+}
+
+/* Compact Question Count and Time Limit Slider Styles */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+}
+
+/* Question count slider colors */
+#question-count {
+    background: linear-gradient(to right, #3b82f6, #93c5fd);
+}
+
+/* Time limit slider colors */
+#time-limit {
+    background: linear-gradient(to right, #ef4444, #fca5a5);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background 0.2s, transform 0.2s;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background 0.2s, transform 0.2s;
+}
+
+/* Question count slider thumb */
+#question-count::-webkit-slider-thumb {
+    background: #3b82f6;
+}
+
+#question-count::-moz-range-thumb {
+    background: #3b82f6;
+}
+
+#question-count::-webkit-slider-thumb:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+}
+
+#question-count::-moz-range-thumb:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+}
+
+/* Time limit slider thumb */
+#time-limit::-webkit-slider-thumb {
+    background: #ef4444;
+}
+
+#time-limit::-moz-range-thumb {
+    background: #ef4444;
+}
+
+#time-limit::-webkit-slider-thumb:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+#time-limit::-moz-range-thumb:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+#question-count-display {
+    min-width: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+#time-limit-display {
+    min-width: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Audio initialization button animation */
+#enable-audio {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#enable-audio:hover {
+    transform: scale(1.05);
+}
+
+#enable-audio::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+}
+
+#enable-audio:hover::after {
+    transform: translateX(0);
+}
+
+/* Make sure the audio button doesn't show if JavaScript is disabled */
+.no-js #audio-init-container {
+    display: none;
+}
+
+/* Selected table button */
+.table-btn.selected {
+    background-color: #3b82f6;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Table selector styles */
+.table-selector {
+    background-color: #f3f4f6;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+    opacity: 0;
+    color: #6b7280;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-btn:hover .table-selector {
+    opacity: 1;
+}
+
+.table-selector:hover {
+    transform: scale(1.1);
+}
+
+.table-btn[data-selected="true"] .table-selector {
+    opacity: 1;
+    background-color: #10b981;
+    color: white;
+}
+
+.table-selector::before {
+    content: '+';
+    font-size: 16px;
+    line-height: 1;
+}
+
+.table-btn[data-selected="true"] .table-selector::before {
+    content: '✓';
+    font-size: 14px;
+}
+
+/* Mark button styles */
+.mark-btn {
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    z-index: 10;
+}
+
+.mark-btn:hover {
+    transform: scale(1.1);
+}
+
+.mark-btn.bg-green-500 {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table button styles when marked */
+.table-btn.opacity-50:hover {
+    opacity: 0.7;
+}
+
+/* Correct/Wrong answer styles */
+.correct-answer {
+    background-color: #d1fae5 !important;
+    border-color: #10b981 !important;
+    color: #047857 !important;
+    animation: scale 0.5s ease;
+}
+
+.wrong-answer {
+    background-color: #fee2e2 !important;
+    border-color: #ef4444 !important;
+    color: #b91c1c !important;
+    animation: shake 0.5s ease;
+}
+
+/* Feedback styles */
+.feedback-correct {
+    background-color: #d1fae5;
+    color: #047857;
+    animation: scale 0.5s ease;
+}
+
+.feedback-wrong {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Timer warning */
+.timer-warning {
+    animation: pulse 0.5s ease infinite;
+    color: #ef4444 !important;
+}
+
+/* Transition for screens */
+#selection-screen, #game-screen, #results-screen {
+    transition: opacity 0.3s ease;
+}
+
+/* Confetti effect */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f59e0b;
+    border-radius: 50%;
+    animation: confetti-fall 3s ease-in-out forwards;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .answer-btn {
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+}
